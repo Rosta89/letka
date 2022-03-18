@@ -64,5 +64,12 @@ if ($result) { ?>
                         <input type="submit" class="btn btn-primary" value="Přidat zápas">
                     </div>
                 </form>
+                <form action="index.php?page=match_upload" method="post" enctype="multipart/form-data">
+                    Vyber replay:
+                    <input type="file" name="replay">
+                    <input type="hidden" name="id" value="<?php echo $seriesID ?>">
+                    <input type="hidden" name="matchname" value="<?php echo $result['t_home'] . ' - ' . $result['t_away'] ?>">
+                    <input type="submit" value="Upload Replay" name="submit">
+                </form>
         </div>
     </div>
