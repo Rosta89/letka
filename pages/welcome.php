@@ -1,8 +1,8 @@
 <?php
 
 // Check if the user is logged in, if not then redirect him to login page
-if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
-    header("location: login.php");
+if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] != true) {
+    header("location: index.php?page=login");
     exit;
 }
 ?>
