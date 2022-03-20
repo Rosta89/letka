@@ -1,6 +1,5 @@
 <?php
-$token = 'jChIV7kuI63iaw0fcVpc2FxQLQJUWC8uaSk4U9kM';
-$args['file'] = curl_file_create($_FILES['replay']['tmp_name'], $_FILES['replay']['type'], basename($_FILES['replay']['name'])); 
+$args['file'] = curl_file_create($_FILES['replay']['tmp_name'], $_FILES['replay']['type'], basename($_FILES['replay']['name']));
 
 $header = array('Authorization: ' . $token);
 $url = 'https://ballchasing.com/api/v2/upload?visibility=public';

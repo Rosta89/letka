@@ -1,5 +1,5 @@
 <?php
-$token = 'lO4bgvCliQo9UoaqoNCNM0NUuGA5q1VZyZy46uI0';
+
 $replay = '40b9e95a-4e1b-41e1-88dc-4ec2772a4271';
 $header = array('Authorization: ' . $token);
 $url = 'https://ballchasing.com/api/replays/' . $replay;

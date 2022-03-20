@@ -1,5 +1,4 @@
 <?php
-$token = 'jChIV7kuI63iaw0fcVpc2FxQLQJUWC8uaSk4U9kM';
 $series_id = $_GET["id"];
 $replay = $_GET["replay"];
 $header = array('Authorization: ' . $token);

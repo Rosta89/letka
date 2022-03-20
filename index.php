@@ -21,6 +21,7 @@ session_start();
 
 <body>
     <?php
+    $token = 'jChIV7kuI63iaw0fcVpc2FxQLQJUWC8uaSk4U9kM';
     require_once 'pages/db.php';
     Db::connect('localhost', 'letka', 'root', '');
     ?>
