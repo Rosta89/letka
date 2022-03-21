@@ -1,7 +1,7 @@
 <?php
 $teamID = $_GET['id'];
-$teamName = Db::querySingle("SELECT NAME from TEAMS WHERE ID = ?",$teamID);
-if ($teamName) {
+if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?",$teamID)) {
+    $teamName = Db::querySingle("SELECT NAME from TEAMS WHERE ID = ?",$teamID);
     $players = Db::queryAll("SELECT pl.name,plt.player_role
     FROM players pl 
     JOIN players_2_teams plt on plt.player_id = pl.id
