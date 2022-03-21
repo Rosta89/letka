@@ -59,21 +59,17 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                         <tr>
                             <?php
                             $i = 0;
-                            foreach ($result as $row) {
-                                $i++;
-                                echo ('<th>');
-                                echo $i;
-                                echo ('</th><td>');
-                                echo $row['TEAM_NAME'];
-                                echo ('</th><td>');
-                                echo $row['SERIES'];
-                                echo ('</th><td>');
-                                echo $row['POINTS'];
-                                echo ('</th><td>');
-                                echo $row['WINS'];
-                                echo ('</th><td>');
-                                echo $row['LOSSES'];
-                                echo ('</td></tr>');
+                            foreach ($result as $row) {                                
+                                $i++;?>
+                                <tr>
+                                    <td><?=$i?>.</td>
+                                    <td><?=$row['TEAM_NAME']?></td>
+                                    <td><?=$row['SERIES']?></td>
+                                    <td><?=$row['POINTS']?></td>
+                                    <td><?=$row['WINS']?></td>
+                                    <td><?=$row['LOSSES']?></td>
+                                </tr>
+                                <?php
                             }
                             ?>
                     </tbody>
@@ -94,30 +90,22 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
                             <?php
                             $i = 0;
                             foreach ($playerStats as $row) {
-                                $i++;
-                                echo ('<th>');
-                                echo $i;
-                                echo ('</th><td>');
-                                echo $row['PLAYER_NAME'];
-                                echo ('</th><td>');
-                                echo $row['TEAM_NAME'];
-                                echo ('</th><td>');
-                                echo $row['MATCHES'];
-                                echo ('</th><td>');
-                                echo $row['GOALS'];
-                                echo ('</th><td>');
-                                echo $row['ASSISTS'];
-                                echo ('</th><td>');
-                                echo $row['SAVES'];
-                                echo ('</th><td>');
-                                echo $row['MVPS'];
-                                echo ('</th><td>');
-                                echo $row['POINTS'];
-                                echo ('</td></tr>');
+                                $i++;?>
+                                <tr>
+                                    <td><?=$i?>.</td>
+                                    <td><?=$row['PLAYER_NAME']?></td>
+                                    <td><?=$row['TEAM_NAME']?></td>
+                                    <td><?=$row['MATCHES']?></td>
+                                    <td><?=$row['GOALS']?></td>
+                                    <td><?=$row['ASSISTS']?></td>
+                                    <td><?=$row['SAVES']?></td>
+                                    <td><?=$row['MVPS']?></td>
+                                    <td><?=$row['POINTS']?></td>
+                                </tr>
+                                <?php                                    
                             }
                             ?>
                     </tbody>
