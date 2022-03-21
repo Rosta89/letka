@@ -1,6 +1,5 @@
 <?php
 $seriesID = $_GET['id'];
-//$matchID = $_GET['match_id'];
 $teams = Db::queryOne("SELECT s.*, th.NAME t_home, ta.NAME t_away, co.PLAYERS_COUNT
 FROM series s 
 JOIN teams th ON th.ID = s.HOME_TEAM 
