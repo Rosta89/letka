@@ -4,7 +4,7 @@
     <div onmouseover="" style="cursor: pointer;" onclick="document.getElementById('form-id<?php echo $row['id'] ?>').submit();"><?php echo $row['name']; ?></div>
 </form>
 
-udělat POPUP LOGIN???(není asi nutný zatím, přes JS)
+<?php /*udělat POPUP LOGIN???(není asi nutný zatím, přes JS)
 Fantasy draft??
 discord bot??!!
 
@@ -22,7 +22,4 @@ aha
 
 administrace na vytvoření nové ligy
 
-udelat dashboard pro adminy
-
-udělat formulář na zaslání replay/ballchasing
-udělat týmovou stránku
+udelat dashboard pro adminy*/
