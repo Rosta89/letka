@@ -3,21 +3,21 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $competitionsAnnualsId = $_GET['id'];
-    $result = Db::queryAll("SELECT TEAM_NAME, 
+    $result = Db::queryAll("SELECT ID,TEAM_NAME, 
     SUM(CASE WHEN TEAM_SCORE is not null then 1 ELSE 0 END) SERIES,
     SUM(CASE WHEN TEAM_SCORE>OPPONENT_SCORE then 3 ELSE 0 END) POINTS,
     SUM(CASE WHEN TEAM_SCORE>OPPONENT_SCORE then 1 ELSE 0 END) WINS,
     SUM(CASE WHEN TEAM_SCORE<OPPONENT_SCORE then 1 ELSE 0 END) LOSSES
       FROM (
     SELECT 
-    case when te.ID = se.HOME_TEAM then se.HOME_SCORE else se.AWAY_SCORE end TEAM_SCORE,
+    te.ID, case when te.ID = se.HOME_TEAM then se.HOME_SCORE else se.AWAY_SCORE end TEAM_SCORE,
     case when te.ID = se.AWAY_TEAM then se.HOME_SCORE else se.AWAY_SCORE end OPPONENT_SCORE,
     te.NAME TEAM_NAME FROM teams_2_competition_annuals tca
     JOIN TEAMS te ON te.ID = tca.TEAM_ID
     JOIN SERIES se ON ((te.ID = se.HOME_TEAM OR te.ID = se.AWAY_TEAM) and se.COMPETITION_ANNUAL_ID = tca.COMPETITION_ANNUAL_ID)
     JOIN teams_2_competition_annuals tca2 ON ((tca2.TEAM_ID = se.HOME_TEAM OR tca2.TEAM_ID  = se.AWAY_TEAM) and se.COMPETITION_ANNUAL_ID = tca2.COMPETITION_ANNUAL_ID and tca2.TEAM_ID <> te.ID)
     WHERE HOME_TEAM <>0 AND AWAY_TEAM <> 0 AND TCA.COMPETITION_ANNUAL_ID = ? AND tca.ACTIVE = 1 AND tca2.ACTIVE = 1
-    ) a GROUP BY TEAM_NAME ORDER BY POINTS DESC
+    ) a GROUP BY ID,TEAM_NAME ORDER BY POINTS DESC
     ", $competitionsAnnualsId);
     $playerStats = Db::queryAll("SELECT te.NAME TEAM_NAME,pl.NAME PLAYER_NAME,
      COUNT(*) MATCHES,
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                                 $i++;?>
                                 <tr>
                                     <td><?=$i?>.</td>
-                                    <td><?=$row['TEAM_NAME']?></td>
+                                    <td><a href="index.php?page=team&id=<?=$row['ID']?>"><?=$row['TEAM_NAME']?></a></td>
                                     <td><?=$row['SERIES']?></td>
                                     <td><?=$row['POINTS']?></td>
                                     <td><?=$row['WINS']?></td>
