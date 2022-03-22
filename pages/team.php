@@ -15,8 +15,14 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
         <div class="mt-5">
             <div class="containerInput">
                 <div class="row">
-                    <div class="col-md-6 text-center">
-                        <img src="images/581.png" alt="HTML tutorial">
+                    <div class="col-md-6 text-center" style="margin:auto;">
+                        <?php
+                        if (file_exists('images/' . $teamID . '.png')) {
+                            echo '<img src="images/' . $teamID . '.png">';
+                        } else {
+                            echo '<img src="images/no_logo.png">';
+                        }
+                        ?>
                     </div>
                     <div class="text-left col-md-6 " style="margin:auto;">
                         <table class="content-table">
