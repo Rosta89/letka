@@ -1,6 +1,7 @@
 <?php
-$teamID = $_GET['id'];
-if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
+
+if (isset($_GET['id']) && Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $_GET['id'])) {
+    $teamID = $_GET['id'];
     $teamName = Db::querySingle("SELECT NAME from TEAMS WHERE ID = ?", $teamID);
     $players = Db::queryAll("SELECT pl.name,plt.player_role
     FROM players pl 
@@ -62,8 +63,8 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                     <?php
                     if ($leagues) {
                         echo ('<p>Ligy</p>');
-                        foreach ($leagues as $leagues) {
-                            echo ('<p><a href="index.php?page=table&id=' . $leagues['COMPETITION_ANNUAL_ID'] . '">' . $leagues['cName'] . ' ' . $leagues['caName'] . '</p>');
+                        foreach ($leagues as $league) {
+                            echo ('<p><a href="index.php?page=table&id=' . $league['COMPETITION_ANNUAL_ID'] . '">' . $league['cName'] . ' ' . $league['caName'] . '</p>');
                         }
                     } else {
                         echo ('<p>Není v lize</p>');
