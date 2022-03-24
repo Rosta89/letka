@@ -87,7 +87,7 @@ session_start();
                         <li class="nav-item"><a class="nav-link" href="index.php?page=league_create">Vytvořit ligu</a></li>
                         <li class="nav-item"><a class="nav-link" href="index.php?page=team_create">Vytvořit team</a></li>
                         <li class="nav-item"><a class="nav-link" href="index.php?page=player_create">Vytvořit hráče</a></li>
-                        <li class="nav-item"><a class="nav-link" href="index.php?page=table_update">Zadat výsledek</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?page=administration">Administrace</a></li>
                     </ul>
                 </li>
             <?php

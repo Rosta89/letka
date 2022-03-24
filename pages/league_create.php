@@ -1,18 +1,15 @@
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $league_create = $league_err = $send_err = "";
+        $league_create = $league_err = "";
         $n = 0;
-        if ($_POST['creatab'] == null) {
-            header("location: index.php?page=home");
-            $creatab_err = "nevybral si team";
+        if (!isset($_POST['creatab'])) {
+            $league_err = "nevybral si team";
         } else if ($_POST['league_name'] == null) {
-            header("location: index.php?page=home");
-            $creatab_err = "nezadal si jmeno ligy";
+            $league_err = "nezadal si jmeno ligy";
+        } else if (count($_POST['creatab']) <= 1) {
+            $league_err = "nevybral si dostatek týmu";
         } else {
             $table_teams = $_POST['creatab'];
-
-            //VLOŽENÍ DO TABULKY COMPETITIONS ANNUALS;
-            //to-do error checking;
             $annual = DB::querySingle("SELECT MAX(ANNUAL) ann from competition_annuals where COMPETITION_ID = ?", $_POST['league']) + 1;
             $compAnnualID = DB::getLastId(Db::query("INSERT INTO competition_annuals (NAME,COMPETITION_ID,ANNUAL) VALUES (?,?,?)", $_POST['league_name'], $_POST['league'], $annual));
             $n = count($table_teams);
@@ -27,7 +24,6 @@
                 $n2 = ($n - 1) / 2;
             }
             for ($i = 0; $i < $n; $i++) {
-                //VLOŽENÍ TÝMU DO TABULKY S ANNUALS
                 Db::query("INSERT INTO teams_2_competition_annuals (TEAM_ID,COMPETITION_ANNUAL_ID) VALUES (?,?)", $table_teams[$i], $compAnnualID);
             }
             $j = 0;
@@ -36,11 +32,8 @@
                     for ($i = 0; $i < $n2; $i++) {
                         $team1 = $table_teams[$n2 - $i];
                         $team2 = $table_teams[$n2 + $i + 1];
-                        //Vložení do tabulky SERIES
-                        $param_home = $team1;
-                        $param_away = $team2;
                         $param_round = $x + 1;
-                        Db::query("INSERT INTO series (COMPETITION_ANNUAL_ID,HOME_TEAM,AWAY_TEAM,ROUND) VALUES (?,?,?,?)", $compAnnualID, $param_home, $param_away, $param_round);
+                        Db::query("INSERT INTO series (COMPETITION_ANNUAL_ID,HOME_TEAM,AWAY_TEAM,ROUND) VALUES (?,?,?,?)", $compAnnualID, $team1, $team2, $param_round);
                     }
                     $tmp = $table_teams[1];
                     for ($i = 1; $i < sizeof($table_teams) - 1; $i++) {
@@ -49,7 +42,7 @@
                     $table_teams[sizeof($table_teams) - 1] = $tmp;
                 }
             }
-            if (empty($send_err)) {
+            if (empty($league_err)) {
                 $league_create = "liga založena";
             }
         }
@@ -73,9 +66,6 @@
         <?php
         if (!empty($league_err)) {
             echo '<div class="alert alert-danger">' . $league_err . '</div>';
-        }
-        if (!empty($send_err)) {
-            echo '<div class="alert alert-danger">' . $send_err . '</div>';
         }
         if (!empty($league_create)) {
             echo '<div class="alert alert-success">' . $league_create . '</div>';
