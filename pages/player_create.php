@@ -1,5 +1,4 @@
 <?php
-require_once('db.php');
 $name = $steam = $epic = $contact = $ps = $xbox = '';
 // Check connection
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

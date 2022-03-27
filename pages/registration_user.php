@@ -1,5 +1,4 @@
 <?php
-require_once('Db.php');
 $username = $password = $confirm_password = "";
 $registr_err = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
