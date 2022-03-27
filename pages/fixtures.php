@@ -58,8 +58,7 @@ if ($result) { ?>
 
                 echo ('</td></div><td>');
                 echo $row['t_away'];
-                echo ('</td><td><a href="index.php?page=series&id=' . $row['ID'] . '">');
-                echo ('Upravit</a></td>');
+                echo ('</td><td><a href="index.php?page=series&id=' . $row['ID'] . '">Upravit</a></td>');
                 echo ('</tr>');
             }
             echo "</tbody></table></div>";

@@ -18,6 +18,7 @@ if ($result) { ?>
                             <th class="col-md-5">Team1</th>
                             <th class="col-md-2">Skóre</th>
                             <th class="col-md-5">Team2</th>
+                            <th class="col-md-5">Ballchasing</th>
                             <th class="col-md-2">Smazat</th>
                         </tr>
                     </thead>
@@ -30,12 +31,22 @@ if ($result) { ?>
                             echo '<td>' . $result['HOME_SCORE'] . ':' . $result['AWAY_SCORE'] . '</td>';
                         }?>
                         <td><?=$result['away_name']?></td>
+                        <?php if ($result['BALLCHASING']!='') {?>
+                                <td><a href="https://ballchasing.com/group/<?=$result['BALLCHASING']?>">Odkaz</a></td>
+                        <?php } else {
+                                echo "<td>Neexistuje</td>";
+                        }?>
                         <tr>
                         <?php foreach ($matches as $row) {?>
                             <tr>
                             <td><?=$result['home_name']?></td>
                             <td><a href="index.php?page=matches&id=<?=$seriesID?>&match_id=<?=$row['ID']?>"><?=$row['HOME_SCORE']?>:<?=$row['AWAY_SCORE']?></a></td>
                             <td><?=$result['away_name']?></td>
+                            <?php if ($row['BALLCHASING']!='') {?>
+                                <td><a href="https://ballchasing.com/replay/<?=$row['BALLCHASING']?>">Odkaz</a></td>
+                            <?php } else {
+                                echo "<td>Neexistuje</td>";
+                            }?>
                             <td><a href="index.php?page=matches_delete&id=<?=$seriesID?>&match_id=<?=$row['ID']?>">smazat</a></td>
                             <tr>
                         <?php
@@ -45,6 +56,13 @@ if ($result) { ?>
                     <div class=" form-group mt-2">
                         <input type="submit" class="btn btn-primary" value="Přidat zápas">
                     </div>
+                </form>
+                <form action="index.php?page=match_upload" method="post" enctype="multipart/form-data">
+                    Odkaz na replay:
+                    <input type="text" name="link">
+                    <input type="hidden" name="id" value="<?=$seriesID?>">
+                    <input type="hidden" name="matchname" value="<?php echo $result['home_name'] . ' - ' . $result['away_name'] ?>">
+                    <input type="submit" value="Upload Replay" name="submit">
                 </form>
                 <form action="index.php?page=match_upload" method="post" enctype="multipart/form-data">
                     Vyber replay:
