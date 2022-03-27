@@ -16,23 +16,26 @@ else {
 if (!isset($error)){
   $url = 'https://ballchasing.com/api/v2/upload?visibility=public';
   $decodedData = ballchasing::useApi($url, 2, $args);
+  if (isset($decodedData['error'])){
+    echo "Replay už je uložený";
+    echo '<br><a href="index.php?page=series&id=' . $_POST["id"] . '><input type="submit"/>Zpět</a>';
+  } else {  
+    $replay_id = $decodedData['id'];
 
-  $replay_id = basename($decodedData['location']);
+    //smazat uložený dočasný replay
+    if (isset($_POST['link'])) {
+      unlink("tempfile.replay");
+    }
 
-  //smazat uložený dočasný replay
-  if (isset($_POST['link'])) {
-    unlink("tempfile.replay");
+    $orderOfMatch = Db::querySingle("SELECT COUNT(*) FROM MATCHES WHERE SERIES_ID = ?", $_POST["id"]) + 1;
+    $idBCSerie = ballchasing::getIDSeries($_POST["id"],$_POST["matchname"]);
+    $args = '{
+        "title": "' . $_POST["matchname"] . ' ' . $orderOfMatch . '. zápas", "group": "' . $idBCSerie . '"
+      }';
+    $url = 'https://ballchasing.com/api/replays/' . $replay_id;
+    ballchasing::useApi($url, 1, $args);
+    header("location: index.php?page=match_ballchase&replay=" . $replay_id . "&id=" . $_POST["id"]);
   }
-
-
-  $count = Db::querySingle("SELECT COUNT(*) FROM MATCHES WHERE SERIES_ID = ?", $_POST["id"]) + 1;
-  $idBCSerie = ballchasing::getIDSeries($_POST["id"],$_POST["matchname"]);
-  $args = '{
-      "title": "' . $_POST["matchname"] . ' ' . $count . '. zápas", "group": "' . $idBCSerie . '"
-    }';
-  $url = 'https://ballchasing.com/api/replays/' . $replay_id;
-  ballchasing::useApi($url, 1, $args);
-  header("location: index.php?page=match_ballchase&replay=" . $replay_id . "&id=" . $_POST["id"]);
 }
 else {
   echo $error;
