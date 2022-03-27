@@ -6,9 +6,6 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
     exit;
 }
 
-// Include config file
-require_once "db.php";
-
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_err = $password_err = $login_err = "";

@@ -1,6 +1,14 @@
 <?php
 ob_start();
 session_start();
+
+// automatické načítání tříd
+function loadClass($class)
+{
+    require("classes/$class.php");
+};
+spl_autoload_register("loadClass");
+Db::connect('localhost', 'letka', 'root', '');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,11 +28,6 @@ session_start();
 </head>
 
 <body>
-    <?php
-    $token = 'jChIV7kuI63iaw0fcVpc2FxQLQJUWC8uaSk4U9kM';
-    require_once 'pages/db.php';
-    Db::connect('localhost', 'letka', 'root', '');
-    ?>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.php?page=home">Web</a>

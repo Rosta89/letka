@@ -1,28 +1,14 @@
 <?php
 $args['file'] = curl_file_create($_FILES['replay']['tmp_name'], $_FILES['replay']['type'], basename($_FILES['replay']['name']));
 
-$header = array('Authorization: ' . $token);
 $url = 'https://ballchasing.com/api/v2/upload?visibility=public';
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_URL, $url);
-$decodedData = json_decode(curl_exec($ch), true);
-curl_close($ch);
-$replay_id = basename($decodedData['location']);
+$decodedData = ballchasing::postApi($url, $args);
 
+$replay_id = basename($decodedData['location']);
+$pocet = Db::querySingle("SELECT COUNT(*) FROM MATCHES WHERE SERIES_ID = ?", $_POST["id"]) + 1;
 $data = '{
-    "title": "' . $_POST["matchname"] . '"
+    "title": "' . $_POST["matchname"] . ' ' . $pocet . '. zápas"
   }';
 $url = 'https://ballchasing.com/api/replays/' . $replay_id;
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_exec($ch);
-curl_close($ch);
+ballchasing::patchApi($url, $data);
 header("location: index.php?page=match_ballchase&replay=" . $replay_id . "&id=" . $_POST["id"]);
