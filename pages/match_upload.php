@@ -25,10 +25,10 @@ if (!isset($error)){
   }
 
 
-  $pocet = Db::querySingle("SELECT COUNT(*) FROM MATCHES WHERE SERIES_ID = ?", $_POST["id"]) + 1;
+  $count = Db::querySingle("SELECT COUNT(*) FROM MATCHES WHERE SERIES_ID = ?", $_POST["id"]) + 1;
   $idBCSerie = ballchasing::getIDSeries($_POST["id"],$_POST["matchname"]);
   $args = '{
-      "title": "' . $_POST["matchname"] . ' ' . $pocet . '. zápas", "group": "' . $idBCSerie . '"
+      "title": "' . $_POST["matchname"] . ' ' . $count . '. zápas", "group": "' . $idBCSerie . '"
     }';
   $url = 'https://ballchasing.com/api/replays/' . $replay_id;
   ballchasing::useApi($url, 1, $args);
