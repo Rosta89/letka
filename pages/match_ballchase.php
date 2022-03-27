@@ -46,16 +46,19 @@ if ($decodedData['status'] == 'ok') {
         $decodedData[$colors[$team]]['stats']['core']['goals']
     );
     Db::query('UPDATE SERIES se, 
-    (SELECT SUM(CASE WHEN HOME_SCORE>AWAY_SCORE THEN 1 ELSE 0 END) home,
-    SUM(CASE WHEN HOME_SCORE<AWAY_SCORE THEN 1 ELSE 0 END) away,SERIES_ID
-    FROM MATCHES GROUP BY SERIES_ID) ma SET se.HOME_SCORE = home,se.AWAY_SCORE = away 
+    (SELECT 
+    SUM(CASE WHEN HOME_SCORE>AWAY_SCORE THEN 1 ELSE 0 END) home,
+    SUM(CASE WHEN HOME_SCORE<AWAY_SCORE THEN 1 ELSE 0 END) away,
+    SERIES_ID
+    FROM MATCHES GROUP BY SERIES_ID) ma 
+    SET se.HOME_SCORE = home,se.AWAY_SCORE = away 
     WHERE ma.SERIES_ID = se.ID AND se.ID = ?', $series_id);
     header("location: index.php?page=series&id=" . $series_id);
 }
 elseif ($decodedData['status'] == 'pending')
 {
-    echo "Čeká se na zpracování (stránka se automaticky refreshne za 10s)";
-    echo '<meta http-equiv="refresh" content="10" >';
+    echo "Čeká se na zpracování (stránka se automaticky refreshne za 3s)";
+    echo '<meta http-equiv="refresh" content="3" >';
 
     echo "<br /><center><input type='submit' name='submitAdd' value='Refresh' onclick='window.location.reload(true);'></center>";
 

@@ -19,7 +19,7 @@ class ballchasing
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
         $data = curl_exec($ch);
-        echo $data . "<br>"; //dobrý na debugování chyb api
+        //echo $data . "<br>"; //dobrý na debugování chyb api
         if ($decode == true) {
             $data = json_decode($data, true);
         }
