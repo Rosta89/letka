@@ -37,7 +37,7 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                         <form action="index.php" method="GET">
                             <table class="content-table">
                                 <input type="hidden" name="page" value="team">
-                                <input type="hidden" name="id" value="<?php echo $teamID; ?>">
+                                <input type="hidden" name="id" value="<?= $teamID ?>">
                                 <input type="hidden" name="edit" value="true">
                                 <h2><?= $teamName ?></h2>
                                 <thead>
@@ -51,7 +51,10 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                     <?php foreach ($players as $player) {
                                     ?>
                                         <tr>
-                                            <td><?= $player['name'] ?></td>
+                                            <td>
+                                                <?php echo ('<p><a href="index.php?page=player&id=' . $player['id'] . '">' . $player['name'] .  '</p>');
+                                                ?>
+                                            </td>
                                             <td>
                                                 <?php
 
@@ -65,7 +68,7 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                                 ?>
                                             </td>
                                             <td>
-                                                <input type="hidden" name="playerID[]" value="<?php echo $player['id']; ?>">
+                                                <input type="hidden" name="playerID[]" value="<?= $player['id'] ?>">
                                                 <select name='role[]'>
                                                     <option value="0">Hráč</option>
                                                     <option value="1">Kapitán</option>
@@ -86,8 +89,8 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                     <?php
                     if ($leagues) {
                         echo ('<p>Ligy</p>');
-                        foreach ($leagues as $leagues) {
-                            echo ('<p><a href="index.php?page=table&id=' . $leagues['COMPETITION_ANNUAL_ID'] . '">' . $leagues['cName'] . ' ' . $leagues['caName'] . '</p>');
+                        foreach ($leagues as $league) {
+                            echo ('<p><a href="index.php?page=table&id=' . $league['COMPETITION_ANNUAL_ID'] . '">' . $league['cName'] . ' ' . $league['caName'] . '</p>');
                         }
                     } else {
                         echo ('<p>Není v lize</p>');
