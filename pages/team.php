@@ -1,6 +1,7 @@
 <?php
 $teamID = $_GET['id'];
 if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
+    $playerRoles = array('Hráč', 'Kapitán');
     if (isset($_GET['edit'])) {
         //ověřit zda má na to právo
         $playersNumber = Db::querySingle("SELECT COUNT(*) from players_2_teams WHERE TEAM_ID = ?", $teamID);
@@ -58,20 +59,17 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                             <td>
                                                 <?php
 
-                                                if ($player['player_role'] == 0) {
-                                                    echo "Hráč";
-                                                } else if ($player['player_role'] == 1) {
-                                                    echo "Kapitán";
-                                                } else {
-                                                    echo "Neurčeno";
-                                                }
+                                                echo $playerRoles[$player['player_role']];
                                                 ?>
                                             </td>
                                             <td>
                                                 <input type="hidden" name="playerID[]" value="<?= $player['id'] ?>">
                                                 <select name='role[]'>
-                                                    <option value="0">Hráč</option>
-                                                    <option value="1">Kapitán</option>
+                                                    <?php
+                                                    for ($i = 0; $i < count($playerRoles); $i++) {
+                                                        echo ('<option value=' . $i . '> ' . $playerRoles[$i] . '</option>');
+                                                    }
+                                                    ?>
                                                 </select>
                                             </td>
                                         </tr>
