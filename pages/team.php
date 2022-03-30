@@ -58,8 +58,12 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                             </td>
                                             <td>
                                                 <?php
+                                                if (array_key_exists($player['player_role'], $playerRoles)) {
 
-                                                echo $playerRoles[$player['player_role']];
+                                                    echo $playerRoles[$player['player_role']];
+                                                } else {
+                                                    echo 'Neurčeno';
+                                                }
                                                 ?>
                                             </td>
                                             <td>
