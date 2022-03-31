@@ -5,7 +5,7 @@ session_start();
 // automatické načítání tříd
 function loadClass($class)
 {
-    require("classes/$class.php");
+    require_once("classes/$class.php");
 };
 spl_autoload_register("loadClass");
 Db::connect('localhost', 'letka', 'root', '');

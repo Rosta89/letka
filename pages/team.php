@@ -1,7 +1,7 @@
 <?php
 $teamID = $_GET['id'];
 if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
-    $playerRoles = array('Hráč', 'Kapitán');
+    $playerRoles = array('Neaktivní', 'Hráč', 'Kapitán');
     if (isset($_GET['edit'])) {
         //ověřit zda má na to právo
         $playersNumber = Db::querySingle("SELECT COUNT(*) from players_2_teams WHERE TEAM_ID = ?", $teamID);

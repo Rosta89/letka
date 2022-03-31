@@ -34,9 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
      JOIN series se ON se.id = ma.SERIES_ID
      JOIN players_2_teams plt ON pl.id = plt.PLAYER_ID
      JOIN teams te ON te.id = plt.TEAM_ID
+     JOIN teams_2_competition_annuals tea ON tea.TEAM_ID = plt.TEAM_ID AND tea.COMPETITION_ANNUAL_ID = ?
      WHERE se.COMPETITION_ANNUAL_ID = ?
      GROUP BY te.NAME,pl.NAME ORDER BY POINTS DESC
-     ", $competitionsAnnualsId);
+     ", $competitionsAnnualsId, $competitionsAnnualsId);
 
     //SQL 
     if ($result) {
@@ -59,19 +60,19 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                         <tr>
                             <?php
                             $i = 0;
-                            foreach ($result as $row) {                                
-                                $i++;?>
-                                <tr>
-                                    <td><?=$i?>.</td>
-                                    <td><a href="index.php?page=team&id=<?=$row['ID']?>"><?=$row['TEAM_NAME']?></a></td>
-                                    <td><?=$row['SERIES']?></td>
-                                    <td><?=$row['POINTS']?></td>
-                                    <td><?=$row['WINS']?></td>
-                                    <td><?=$row['LOSSES']?></td>
-                                </tr>
-                                <?php
+                            foreach ($result as $row) {
+                                $i++; ?>
+                        <tr>
+                            <td><?= $i ?>.</td>
+                            <td><a href="index.php?page=team&id=<?= $row['ID'] ?>"><?= $row['TEAM_NAME'] ?></a></td>
+                            <td><?= $row['SERIES'] ?></td>
+                            <td><?= $row['POINTS'] ?></td>
+                            <td><?= $row['WINS'] ?></td>
+                            <td><?= $row['LOSSES'] ?></td>
+                        </tr>
+                    <?php
                             }
-                            ?>
+                    ?>
                     </tbody>
                 </table>
                 <table class="content-table">
@@ -90,24 +91,24 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                         </tr>
                     </thead>
                     <tbody>
-                            <?php
-                            $i = 0;
-                            foreach ($playerStats as $row) {
-                                $i++;?>
-                                <tr>
-                                    <td><?=$i?>.</td>
-                                    <td><?=$row['PLAYER_NAME']?></td>
-                                    <td><?=$row['TEAM_NAME']?></td>
-                                    <td><?=$row['MATCHES']?></td>
-                                    <td><?=$row['GOALS']?></td>
-                                    <td><?=$row['ASSISTS']?></td>
-                                    <td><?=$row['SAVES']?></td>
-                                    <td><?=$row['MVPS']?></td>
-                                    <td><?=$row['POINTS']?></td>
-                                </tr>
-                                <?php                                    
-                            }
-                            ?>
+                        <?php
+                        $i = 0;
+                        foreach ($playerStats as $row) {
+                            $i++; ?>
+                            <tr>
+                                <td><?= $i ?>.</td>
+                                <td><?= $row['PLAYER_NAME'] ?></td>
+                                <td><?= $row['TEAM_NAME'] ?></td>
+                                <td><?= $row['MATCHES'] ?></td>
+                                <td><?= $row['GOALS'] ?></td>
+                                <td><?= $row['ASSISTS'] ?></td>
+                                <td><?= $row['SAVES'] ?></td>
+                                <td><?= $row['MVPS'] ?></td>
+                                <td><?= $row['POINTS'] ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
