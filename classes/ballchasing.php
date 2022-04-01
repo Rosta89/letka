@@ -34,9 +34,8 @@ class Ballchasing
             $url = 'https://ballchasing.com/api/groups';
             $args = '{"name":"' . $matchName . '","parent":"' . $idCompAnnual . '","player_identification":"by-id","team_identification":"by-player-clusters"}';
             $decodedData = self::useApi($url, 2, $args);
-            $idSeries = $decodedData['id'];
-            Db::query("UPDATE SERIES SET BALLCHASING = ? WHERE ID = ?", $idSeries, $seriesID);
-            return $idSeries;
+            Db::query("UPDATE SERIES SET BALLCHASING = ? WHERE ID = ?", $decodedData['id'], $seriesID);
+            return $decodedData['id'];
         }    
         return $series['BALLCHASING'];
     }
@@ -48,10 +47,9 @@ class Ballchasing
             $url = 'https://ballchasing.com/api/groups';
             $args = '{"name":"' . $compAnnual['NAME'] . '","player_identification":"by-id","team_identification":"by-player-clusters"}';
             $decodedData = self::useApi($url, 2, $args);
-            $idCompAnnual = $decodedData['id'];
             Db::query("UPDATE COMPETITION_ANNUALS SET BALLCHASING = ? WHERE ID = ?", $decodedData['id'], $compID);
             return $decodedData['id'];    
         }
-        return $idCompAnnual;
+        return $compAnnual['BALLCHASING'];
     }
 }
