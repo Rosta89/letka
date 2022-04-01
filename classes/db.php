@@ -1,4 +1,8 @@
 <?php
+
+use Exception;
+use PDO;
+
 class Db
 {
 	/**
@@ -48,7 +52,8 @@ class Db
 	 * @param string $query Dotaz
 	 * @return int Počet ovlivněných řádků
 	 */
-	public static function query($query) {
+	public static function query($query)
+	{
 		$statement = self::executeStatement(func_get_args());
 		return $statement->rowCount();
 	}
@@ -58,7 +63,8 @@ class Db
 	 * @param string $query Dotaz
 	 * @return mixed Hodnota prvního sloupce z prvního řádku
 	 */
-	public static function querySingle($query) {
+	public static function querySingle($query)
+	{
 		$statement = self::executeStatement(func_get_args());
 		$data = $statement->fetch();
 		return $data[0];
@@ -69,7 +75,8 @@ class Db
 	 * @param string $query Dotaz
 	 * @return mixed Pole výsledků nebo false při neúspěchu
 	 */
-	public static function queryOne($query) {
+	public static function queryOne($query)
+	{
 		$statement = self::executeStatement(func_get_args());
 		return $statement->fetch(PDO::FETCH_ASSOC);
 	}
@@ -79,7 +86,8 @@ class Db
 	 * @param string $query Dotaz
 	 * @return mixed Pole řádků enbo false při neúspěchu
 	 */
-	public static function queryAll($query) {
+	public static function queryAll($query)
+	{
 		$statement = self::executeStatement(func_get_args());
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
@@ -90,7 +98,8 @@ class Db
 	 * @param array $data Asociativní pole, kde jsou klíče sloupce a hodnoty hodnoty
 	 * @return int Počet ovlivněných řádků
 	 */
-	public static function insert($table, $data) {
+	public static function insert($table, $data)
+	{
 		$keys = array_keys($data);
 		self::checkIdentifiers(array($table) + $keys);
 		$query = "
@@ -109,11 +118,12 @@ class Db
 	 * @param string $condition Řetězec s SQL podmínkou (WHERE)
 	 * @return mixed
 	 */
-	public static function update($table, $data, $condition) {
+	public static function update($table, $data, $condition)
+	{
 		$keys = array_keys($data);
 		self::checkIdentifiers(array($table) + $keys);
 		$query = "
-			UPDATE `$table` SET `".
+			UPDATE `$table` SET `" .
 			implode('` = ?, `', array_keys($data)) . "` = ?
 			$condition
 		";
@@ -148,8 +158,7 @@ class Db
 	 */
 	private static function checkIdentifiers($identifiers)
 	{
-		foreach ($identifiers as $identifier)
-		{
+		foreach ($identifiers as $identifier) {
 			if (!preg_match('/^[a-zA-Z0-9\_\-]+$/u', $identifier))
 				throw new Exception('Dangerous identifier in SQL query');
 		}
