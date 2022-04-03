@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $i = 0;
             $team_name = trim($_POST["team_name"]);
             $players[$i++] = ($_POST["captain"]);
-            $contact = trim($_POST["contact"]);
+            //$contact = trim($_POST["contact"]);
             $players[$i++] = ($_POST["player1"]);
             $players[$i++] = ($_POST["player2"]);
             $players[$i++] = ($_POST["player3"]);
@@ -30,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "Stala se chyba, zkus to znovu";
                         exit();
                     }
-                    $param_player_role = 0;
                 }
             }
             $new_team = "Team založen";

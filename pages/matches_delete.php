@@ -3,7 +3,7 @@ $match_id = $_GET['match_id'];
 $ballchasingId = Db::querySingle('SELECT BALLCHASING FROM matches WHERE ID = ?', $match_id);
 if ($ballchasingId!=''){
     $url = 'https://ballchasing.com/api/replays/' . $ballchasingId;
-    ballchasing::useApi($url, 3);
+    Ballchasing::useApi($url, 3);
 }
 Db::query('DELETE FROM matches WHERE ID = ?', $match_id);
 Db::query('DELETE FROM statistics WHERE MATCH_ID = ?', $match_id);
