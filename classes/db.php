@@ -1,7 +1,7 @@
 <?php
 
-use Exception;
-use PDO;
+//use Exception;
+//use PDO;
 
 class Db
 {
@@ -67,6 +67,9 @@ class Db
 	{
 		$statement = self::executeStatement(func_get_args());
 		$data = $statement->fetch();
+		if ($data==false){
+			return null;
+		}
 		return $data[0];
 	}
 
