@@ -21,7 +21,7 @@ if (isset($_POST['match_id'])) {
         );
     }
 } else {
-    $match_id = DB::getLastId(Db::query('INSERT INTO matches (SERIES_ID,HOME_SCORE,AWAY_SCORE) VALUES (?,?,?)', $_POST["series_id"], $_POST["homeGoals"], $_POST["awayGoals"]));
+    $match_id = Db::getLastId(Db::query('INSERT INTO matches (SERIES_ID,HOME_SCORE,AWAY_SCORE) VALUES (?,?,?)', $_POST["series_id"], $_POST["homeGoals"], $_POST["awayGoals"]));
     for ($i = 0; $i < count($players_id); $i++) {
         Db::query(
             'INSERT INTO statistics (PLAYER_ID,MATCH_ID,GOALS,ASSISTS,SAVES,MVPS,TEAM_ORDER,HOME) VALUES (?,?,?,?,?,?,?,?)',
