@@ -45,7 +45,7 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                     <tr>
                                         <th>Jméno</th>
                                         <th>Role</th>
-                                        <th>Edit</th>
+                                        <?php if ($user->isTeamAdmin($teamID)){echo'<th>Edit</th>';}?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,6 +66,7 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                                 }
                                                 ?>
                                             </td>
+                                            <?php if ($user->isTeamAdmin($teamID)){?>
                                             <td>
                                                 <input type="hidden" name="playerID[]" value="<?= $player['id'] ?>">
                                                 <select name='role[]'>
@@ -76,13 +77,14 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                                     ?>
                                                 </select>
                                             </td>
+                                            <?php }?>
                                         </tr>
                                     <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
-                            <input type="submit" class="btn btn-primary" value="Edit">
+                            <?php if ($user->isTeamAdmin($teamID)){echo'<input type="submit" class="btn btn-primary" value="Edit">';}?>
                         </form>
                     </div>
 

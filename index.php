@@ -1,7 +1,6 @@
 <?php
 ob_start();
 session_start();
-
 // automatické načítání tříd
 function loadClass($class)
 {
@@ -9,6 +8,12 @@ function loadClass($class)
 };
 spl_autoload_register("loadClass");
 Db::connect('localhost', 'letka', 'root', '');
+if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true){
+    $user = new User($_SESSION["id"]);
+}
+else {
+    $user = new User(-1);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
