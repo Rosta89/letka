@@ -10,8 +10,8 @@
             $league_err = "nevybral si dostatek týmu";
         } else {
             $table_teams = $_POST['creatab'];
-            $annual = DB::querySingle("SELECT MAX(ANNUAL) ann from competition_annuals where COMPETITION_ID = ?", $_POST['league']) + 1;
-            $compAnnualID = DB::getLastId(Db::query("INSERT INTO competition_annuals (NAME,COMPETITION_ID,ANNUAL) VALUES (?,?,?)", $_POST['league_name'], $_POST['league'], $annual));
+            $annual = Db::querySingle("SELECT MAX(ANNUAL) ann from competition_annuals where COMPETITION_ID = ?", $_POST['league']) + 1;
+            $compAnnualID = Db::getLastId(Db::query("INSERT INTO competition_annuals (NAME,COMPETITION_ID,ANNUAL) VALUES (?,?,?)", $_POST['league_name'], $_POST['league'], $annual));
             $n = count($table_teams);
             $a = $n;
             if ($n % 2 == 0) {

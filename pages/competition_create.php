@@ -4,7 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_POST['players'] <= 0) {
         $comp_err = "vyber počet hráčů nad 0";
     } else if ($_POST['competition_name'] != "") {
-        if (db::queryAll("SELECT NAME from competitions where NAME = ?", $_POST['competition_name'])) {
+        if (Db::queryAll("SELECT NAME from competitions where NAME = ?", $_POST['competition_name'])) {
             $comp_err = "competition již existuje";
         } else {
             Db::query("INSERT INTO competitions (NAME, PLAYERS_COUNT) VALUES (?,?)", $_POST['competition_name'], $_POST['players']);

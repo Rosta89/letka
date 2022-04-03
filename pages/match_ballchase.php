@@ -2,11 +2,11 @@
 $series_id = $_GET["id"];
 $replay = $_GET["replay"];
 $url = 'https://ballchasing.com/api/replays/' . $replay;
-$decodedData = ballchasing::useApi($url, 0);
+$decodedData = Ballchasing::useApiJson($url, 0);
 if ($decodedData['status'] == 'ok') {    
     $colors[0] = 'blue';
     $colors[1] = 'orange';
-    $match_id = DB::getLastId(Db::query(
+    $match_id = Db::getLastId(Db::query(
         'INSERT INTO matches (SERIES_ID,HOME_SCORE,AWAY_SCORE,BALLCHASING) VALUES (?,?,?,?)',
         $series_id,
         $decodedData[$colors[0]]['stats']['core']['goals'],
