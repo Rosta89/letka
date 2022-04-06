@@ -1,4 +1,5 @@
     <?php
+    //TODO ošetřit počet hráčů v týmu na ligu, zda-li již ten hráč není v jiném týmu
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $league_create = $league_err = "";
         $n = 0;
@@ -11,7 +12,9 @@
         } else {
             $table_teams = $_POST['creatab'];
             $annual = Db::querySingle("SELECT MAX(ANNUAL) ann from competition_annuals where COMPETITION_ID = ?", $_POST['league']) + 1;
+            Db::beginTransaction(); // začátek transakce
             $compAnnualID = Db::getLastId(Db::query("INSERT INTO competition_annuals (NAME,COMPETITION_ID,ANNUAL) VALUES (?,?,?)", $_POST['league_name'], $_POST['league'], $annual));
+            //Rozřazení týmu + vložení týmu do tabulky
             $n = count($table_teams);
             $a = $n;
             if ($n % 2 == 0) {
@@ -26,6 +29,7 @@
             for ($i = 0; $i < $n; $i++) {
                 Db::query("INSERT INTO teams_2_competition_annuals (TEAM_ID,COMPETITION_ANNUAL_ID) VALUES (?,?)", $table_teams[$i], $compAnnualID);
             }
+
             $j = 0;
             for ($i = 0; $i < $n; $i++) {
                 for ($x = 0; $x < $num_week; $x++) {
@@ -47,16 +51,7 @@
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
+    Db::commitTransaction(); //Ukončení transakce
 
     //bez tymu s ID 0
     $result = Db::queryAll("SELECT ID,NAME FROM TEAMS WHERE ID <> 0;");

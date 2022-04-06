@@ -34,6 +34,20 @@ class Db
 		}
 	}
 
+	public static function rollbackTransaction()
+	{
+		self::$connection->rollback();
+	}
+
+	public static function beginTransaction()
+	{
+		self::$connection->beginTransaction();
+	}
+	public static function commitTransaction()
+	{
+		self::$connection->commit();
+	}
+
 	/**
 	 * Spustí dotaz a vrátí PDO statement
 	 * @param array $params Pole, kde je prvním prvkem dotaz a dalšími jsou parametry
@@ -67,7 +81,7 @@ class Db
 	{
 		$statement = self::executeStatement(func_get_args());
 		$data = $statement->fetch();
-		if ($data==false){
+		if ($data == false) {
 			return null;
 		}
 		return $data[0];
