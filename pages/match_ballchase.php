@@ -3,15 +3,18 @@ $series_id = $_GET["id"];
 $replay = $_GET["replay"];
 $url = 'https://ballchasing.com/api/replays/' . $replay;
 $decodedData = Ballchasing::useApiJson($url, 0);
-if ($decodedData['status'] == 'ok') {    
+if ($decodedData['status'] == 'ok') {
+    Db::beginTransaction();
     $colors[0] = 'blue';
     $colors[1] = 'orange';
-    $match_id = Db::getLastId(Db::query(
-        'INSERT INTO matches (SERIES_ID,HOME_SCORE,AWAY_SCORE,BALLCHASING) VALUES (?,?,?,?)',
-        $series_id,
-        $decodedData[$colors[0]]['stats']['core']['goals'],
-        $decodedData[$colors[1]]['stats']['core']['goals'],
-        $_GET["replay"]
+    $match_id = Db::getLastId(Db::insert(
+        'matches',
+        array(
+            'SERIES_ID' => $series_id,
+            'HOME_SCORE' => $decodedData[$colors[0]]['stats']['core']['goals'],
+            'AWAY_SCORE' => $decodedData[$colors[1]]['stats']['core']['goals'],
+            'BALLCHASING' => $_GET["replay"]
+        )
     ));
 
     for ($j = 0; $j < 2; $j++) {
@@ -26,44 +29,41 @@ if ($decodedData['status'] == 'ok') {
             } else {
                 $mvp = 0;
             }
-            Db::query(
-                'INSERT INTO statistics (PLAYER_ID,MATCH_ID,GOALS,ASSISTS,SAVES,MVPS,TEAM_ORDER,HOME) VALUES (?,?,?,?,?,?,?,?)',
-                $player_id,
-                $match_id,
-                $decodedData[$colors[$j]]['players'][$i]['stats']['core']['goals'],
-                $decodedData[$colors[$j]]['players'][$i]['stats']['core']['assists'],
-                $decodedData[$colors[$j]]['players'][$i]['stats']['core']['saves'],
-                $mvp,
-                $i,
-                $team
+            Db::insert(
+                'statistics',
+                array(
+                    'PLAYER_ID' => $player_id,
+                    'MATCH_ID' => $match_id,
+                    'GOALS' => $decodedData[$colors[$j]]['players'][$i]['stats']['core']['goals'],
+                    'ASSISTS' => $decodedData[$colors[$j]]['players'][$i]['stats']['core']['assists'],
+                    'SAVES' => $decodedData[$colors[$j]]['players'][$i]['stats']['core']['saves'],
+                    'MVPS' => $mvp,
+                    'TEAM_ORDER' => $i,
+                    'HOME' => $team
+                )
             );
         }
     }
-    Db::query(
-        'UPDATE matches SET HOME_SCORE=?,AWAY_SCORE = ? WHERE SERIES_ID = ?',
-        $series_id,
-        $decodedData[$colors[1 - $team]]['stats']['core']['goals'],
-        $decodedData[$colors[$team]]['stats']['core']['goals']
+    Db::update(
+        'matches',
+        array(
+            'HOME_SCORE' => $decodedData[$colors[1 - $team]]['stats']['core']['goals'],
+            'AWAY_SCORE' => $decodedData[$colors[$team]]['stats']['core']['goals']
+        ),
+        'WHERE SERIES_ID = ' . $series_id . ''
     );
-    Db::query('UPDATE SERIES se, 
-    (SELECT 
-    SUM(CASE WHEN HOME_SCORE>AWAY_SCORE THEN 1 ELSE 0 END) home,
-    SUM(CASE WHEN HOME_SCORE<AWAY_SCORE THEN 1 ELSE 0 END) away,
-    SERIES_ID
-    FROM MATCHES GROUP BY SERIES_ID) ma 
-    SET se.HOME_SCORE = home,se.AWAY_SCORE = away 
-    WHERE ma.SERIES_ID = se.ID AND se.ID = ?', $series_id);
+    Db::update('SERIES', array(
+        'HOME_SCORE' => Db::query('SELECT * from MATCHES where HOME_SCORE>AWAY_SCORE AND SERIES_ID = ' . $series_id . ''),
+        'AWAY_SCORE' => Db::query('SELECT * from MATCHES where HOME_SCORE<AWAY_SCORE AND SERIES_ID = ' . $series_id . ''),
+    ), 'WHERE ID = ' . $series_id . '');
+    Db::commitTransaction();
     header("location: index.php?page=series&id=" . $series_id);
-}
-elseif ($decodedData['status'] == 'pending')
-{
+} elseif ($decodedData['status'] == 'pending') {
     echo "Čeká se na zpracování (stránka se automaticky refreshne za 3s)";
     echo '<meta http-equiv="refresh" content="3" >';
 
     echo "<br /><center><input type='submit' name='submitAdd' value='Refresh' onclick='window.location.reload(true);'></center>";
-
-}
-else {
+} else {
     echo "Něco se posralo";
     echo $decodedData['status'];
 }

@@ -1,8 +1,4 @@
 <?php
-
-//use Exception;
-//use PDO;
-
 class Db
 {
 	/**

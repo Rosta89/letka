@@ -10,14 +10,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (count($result) == 1) {
             $error = "Hráč již existuje";
         } else {
-            if (Db::query(
-                "INSERT INTO players (NAME, CONTACT, STEAM, EPIC, PS, XBOX) VALUES (?,?,?,?,?,?)",
-                trim($_POST["name"]),
-                trim($_POST["contact"]),
-                trim($_POST["steam"]),
-                trim($_POST["epic"]),
-                trim($_POST["ps"]),
-                trim($_POST["xbox"])
+            if (Db::insert(
+                'players',
+                array(
+                    'NAME' => trim($_POST["name"]),
+                    'CONTACT' => trim($_POST["contact"]),
+                    'STEAM' => trim($_POST["steam"]),
+                    'EPIC' => trim($_POST["epic"]),
+                    'PS' => trim($_POST["ps"]),
+                    'XBOX' => trim($_POST["xbox"])
+                )
             ) == 1) {
                 $newPlayer = "Hráč vytvořen";
             }

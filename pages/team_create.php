@@ -2,6 +2,7 @@
 
 $team_name = $new_team = $captain  = $player1 = $player2 = $player3 = $player4 = "";
 $error = "";
+//TODO ověření pro vytvoření týmu
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["team_name"]))) {
         $error = "Zadej název týmu";
@@ -19,20 +20,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $players[$i++] = ($_POST["player2"]);
             $players[$i++] = ($_POST["player3"]);
             $players[$i] = ($_POST["player4"]);
+            Db::beginTransaction();
+            Db::insert('teams', array(
+                'NAME' => $_POST["team_name"]
+            ));
             //todo error checking, todo players roles
-            //Db::query("BEGIN TRANSACTION");
-            Db::query('INSERT INTO teams (NAME) VALUES (?)', $_POST["team_name"]);
-            $param_player_role = 1;
+            $player_role = 1;
             for ($i = 0; $i < 4; $i++) {
                 if ($players[$i] != "") {
-                    if (Db::query("INSERT INTO players_2_teams (PLAYER_ID,TEAM_ID,PLAYER_ROLE)
-                    VALUES ((SELECT ID from players WHERE NAME = ?),(SELECT ID from teams WHERE NAME = ?),?)", $players[$i], $_POST["team_name"], $param_player_role) != 1) {
+                    if (Db::insert('players_2_teams', array(
+                        'PLAYER_ID' => Db::querySingle("SELECT ID from players WHERE NAME = ?", $players[$i]),
+                        'TEAM_ID' => Db::querySingle("SELECT ID from teams WHERE NAME = ?", $_POST["team_name"]),
+                        'PLAYER_ROLE' => $player_role
+                    )) != 1) {
+                        Db::rollbackTransaction();
                         echo "Stala se chyba, zkus to znovu";
                         exit();
                     }
                 }
             }
             $new_team = "Team založen";
+            Db::commitTransaction();
         } else {
             $error = "Jméno je již zabrané.";
         }

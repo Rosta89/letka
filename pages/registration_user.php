@@ -2,13 +2,12 @@
 $username = $password = $confirm_password = "";
 $registr_err = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate username
+    // Ověření jména
     if (empty(trim($_POST["username"]))) {
         $registr_err = "Špatně zadané údaje";
     } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))) {
         $registr_err = "Špatně zadané údaje";
     } else {
-        // Prepare a select statement
         if (Db::query("SELECT id FROM users WHERE username = ?", trim($_POST["username"])) == 1) {
             $registr_err = "Uživatel již existuje";
         } else {
@@ -16,15 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Validate password
+    // Ověření hesla
     if (empty(trim($_POST["password"]))) {
         $registr_err = "Špatně zadané údaje";
     } elseif (strlen(trim($_POST["password"])) < 6) {
         $registr_err = "Heslo musí být minimálně 6 znaků dlouhé";
     } else {
         $password = trim($_POST["password"]);
-
-        // Validate confirm password
         if (empty(trim($_POST["confirm_password"]))) {
             $registr_err = "Špatně zadané údaje";
         } else {
@@ -36,12 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
-    // Check input errors before inserting in database
+    // Ověření zda vše bylo správně zadáno
     if (empty($registr_err)) {
-
-        // Prepare an insert statement
-        if (Db::query("INSERT INTO users (username, password) VALUES (?, ?)", $username, password_hash($username . $password, PASSWORD_DEFAULT)) == 1) {
-            // Redirect to login page
+        //Vkládání do datáze
+        if (Db::insert('users', array(
+            'username' => $username,
+            'password' => password_hash($username . $password, PASSWORD_DEFAULT)
+        )) == 1) {
             header("location: index.php?page=login");
         } else {
             echo "Stala se chyba, zkus to znovu";
