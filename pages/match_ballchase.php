@@ -50,7 +50,7 @@ if ($decodedData['status'] == 'ok') {
             'HOME_SCORE' => $decodedData[$colors[1 - $team]]['stats']['core']['goals'],
             'AWAY_SCORE' => $decodedData[$colors[$team]]['stats']['core']['goals']
         ),
-        'WHERE SERIES_ID = ' . $series_id . ''
+        'WHERE ID = ' . $match_id . ''
     );
     Db::update('SERIES', array(
         'HOME_SCORE' => Db::query('SELECT * from MATCHES where HOME_SCORE>AWAY_SCORE AND SERIES_ID = ' . $series_id . ''),
