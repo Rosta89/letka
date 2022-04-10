@@ -1,32 +1,23 @@
 <?php
 
-$team_name = $new_team = $captain  = $player1 = $player2 = $player3 = $player4 = "";
+$team_name = $new_team = "";
 $error = "";
-//TODO ověření pro vytvoření týmu
+//TODO ověření pro vytvoření týmu, počet hráčů?
+//Ověření zda je zadáno jméno týmu
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["team_name"]))) {
         $error = "Zadej název týmu";
-    } else if (($_POST["captain"] == '')) {
-        $error = "Zadej jmeno kapitána";
-    } else if (($_POST["player1"] == '' or (($_POST["player2"]) == ''))) {
-        $error = "Nezadal si dostatek hráčů";
     } else {
+        //Ověření zda již tým neexistuje, potom vkladání do DB
         if (Db::query("SELECT ID FROM teams WHERE NAME = ?", $_POST["team_name"]) == 0) {
-            $i = 0;
-            $team_name = trim($_POST["team_name"]);
-            $players[$i++] = ($_POST["captain"]);
-            //$contact = trim($_POST["contact"]);
-            $players[$i++] = ($_POST["player1"]);
-            $players[$i++] = ($_POST["player2"]);
-            $players[$i++] = ($_POST["player3"]);
-            $players[$i] = ($_POST["player4"]);
             Db::beginTransaction();
             Db::insert('teams', array(
                 'NAME' => $_POST["team_name"]
             ));
             //todo error checking, todo players roles
             $player_role = 1;
-            for ($i = 0; $i < 4; $i++) {
+            $players = $_POST["players"];
+            for ($i = 0; $i < count($players); $i++) {
                 if ($players[$i] != "") {
                     if (Db::insert('players_2_teams', array(
                         'PLAYER_ID' => Db::querySingle("SELECT ID from players WHERE NAME = ?", $players[$i]),
@@ -64,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="icon">
                         <ion-icon name="people-outline"></ion-icon>
                     </div>
-                    <input type="text" name="team_name" value="<?php echo $team_name; ?>">
+                    <input type="text" name="team_name" value="<?= $team_name ?>">
                 </div>
             </div>
             <div class="inputBox">
@@ -73,14 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="icon">
                         <ion-icon name="person"></ion-icon>
                     </div>
-                    <select name='captain'>
+                    <select name="players[0]">
                         <option value=""></option>
                         <?php
                         $result = Db::queryAll('SELECT NAME FROM players ORDER BY NAME ASC');
                         if ($result) {
                             foreach ($result as $row) {
                         ?>
-                                <option value="<?php echo $row['NAME']; ?>"><?php echo $row['NAME']; ?></option>
+                                <option value="<?= $row['NAME'] ?>"><?= $row['NAME'] ?></option>
                         <?php
                             }
                         }
@@ -91,18 +82,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <?php for ($i = 1; $i < 5; $i++) { ?>
                 <div class="inputBox">
-                    <span>Hráč <?php echo $i; ?> :</span>
+                    <span>Hráč <?= $i ?> :</span>
                     <div class="box">
                         <div class="icon">
                             <ion-icon name="person-add-outline"></ion-icon>
                         </div>
-                        <select name='player<?php echo $i; ?>'>
+                        <select name='players[<?= $i ?>]'>
                             <option value=""></option>
                             <?php
                             if ($result) {
                                 foreach ($result as $row) {
                             ?>
-                                    <option value="<?php echo $row['NAME']; ?>"><?php echo $row['NAME']; ?></option>
+                                    <option value="<?= $row['NAME'] ?>"><?= $row['NAME'] ?></option>
                             <?php
                                 }
                             }
