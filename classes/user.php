@@ -28,12 +28,9 @@ class User
 
     public function isTeamAdmin($teamID)
     {
-        $result = 1;
-        //Vyhazuje chybu(nejak jsem to nezkoumal víc, ale asi to hází špatnou hodnotu, když daný uživatel není v tom týmu)
-        /*$result = Db::querySingle("SELECT PLAYER_ROLE FROM players_2_teams pt 
+        $result = Db::querySingle("SELECT PLAYER_ROLE FROM players_2_teams pt 
                                     JOIN players pl ON pl.ID = pt.player_id
-                                    WHERE pt.TEAM_ID = ? AND pl.USER_ID = ?", $teamID, $this->userID);*/
-
+                                    WHERE pt.TEAM_ID = ? AND pl.USER_ID = ?", $teamID, $this->userID);
         if ($this->admin == 1 || $result == 1) {
             return true;
         }
