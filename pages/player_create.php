@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'CONTACT' => trim($_POST["contact"]),
                     'STEAM' => trim($_POST["steam"]),
                     'EPIC' => trim($_POST["epic"]),
-                    'PS' => trim($_POST["ps"]),
+                    'PS4' => trim($_POST["ps"]),
                     'XBOX' => trim($_POST["xbox"])
                 )
             ) == 1) {

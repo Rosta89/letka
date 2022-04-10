@@ -78,7 +78,7 @@ class Db
 		$statement = self::executeStatement(func_get_args());
 		$data = $statement->fetch();
 		if ($data == false) {
-			return false;
+			return null;
 		}
 		return $data[0];
 	}
