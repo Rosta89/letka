@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     WHERE HOME_TEAM <>0 AND AWAY_TEAM <> 0 AND TCA.COMPETITION_ANNUAL_ID = ? AND tca.ACTIVE = 1 AND tca2.ACTIVE = 1
     ) a GROUP BY ID,TEAM_NAME ORDER BY POINTS DESC
     ", $competitionsAnnualsId);
-    $playerStats = Db::queryAll("SELECT te.NAME TEAM_NAME,pl.NAME PLAYER_NAME,
+    $playerStats = Db::queryAll("SELECT te.ID TEAM_ID, te.NAME TEAM_NAME, pl.ID PLAYER_ID, pl.NAME PLAYER_NAME,
      COUNT(*) MATCHES,
      SUM(GOALS) GOALS,
      SUM(ASSISTS) ASSISTS,
@@ -97,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                             $i++; ?>
                             <tr>
                                 <td><?= $i ?>.</td>
-                                <td><?= $row['PLAYER_NAME'] ?></td>
-                                <td><?= $row['TEAM_NAME'] ?></td>
+                                <td><a href="index.php?page=player&id=<?= $row['PLAYER_ID'] ?>"><?= $row['PLAYER_NAME'] ?></a></td>
+                                <td><a href="index.php?page=team&id=<?= $row['TEAM_ID'] ?>"><?= $row['TEAM_NAME'] ?></a></td>
                                 <td><?= $row['MATCHES'] ?></td>
                                 <td><?= $row['GOALS'] ?></td>
                                 <td><?= $row['ASSISTS'] ?></td>
