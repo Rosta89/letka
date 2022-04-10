@@ -1,6 +1,6 @@
 <?php
 $competitionAnnual = $_GET['id'];
-$result = Db::queryAll("SELECT s.*, th.NAME t_home, ta.NAME t_away 
+$result = Db::queryAll("SELECT s.*, th.ID HOME_ID, th.NAME HOME_NAME, ta.ID AWAY_ID, ta.NAME AWAY_NAME 
 FROM series s 
 JOIN teams th ON th.ID=s.HOME_TEAM 
 JOIN teams ta ON ta.ID=s.AWAY_TEAM
@@ -38,9 +38,9 @@ if ($result) { ?>
                         <tbody>
                 <?php
                 }
-                echo ('<tr><td>');
-                echo $row['t_home'];
-                echo ('</td><td>');
+                echo ('<tr>');
+                echo ('<td><a href="index.php?page=team&id=' . $row['HOME_ID'] . '">' .$row['HOME_NAME'] . '</a></td>');
+                echo ('<td>');
                 $matchresult = Db::queryAll("SELECT * FROM matches WHERE SERIES_ID = ? ORDER BY ID", $row['ID']);
                 if (is_null($row['HOME_SCORE'])) {
                     echo '-:-';
@@ -54,11 +54,9 @@ if ($result) { ?>
                     }
                     echo ('</span>');
                 }
-
-
-                echo ('</td></div><td>');
-                echo $row['t_away'];
-                echo ('</td><td><a href="index.php?page=series&id=' . $row['ID'] . '">Upravit</a></td>');
+                echo ('</td>');                
+                echo ('<td><a href="index.php?page=team&id=' . $row['AWAY_ID'] . '">' .$row['AWAY_NAME'] . '</a></td>');
+                echo ('<td><a href="index.php?page=series&id=' . $row['ID'] . '">Upravit</a></td>');
                 echo ('</tr>');
             }
             echo "</tbody></table></div>";
