@@ -13,7 +13,14 @@
             $table_teams = $_POST['creatab'];
             $annual = Db::querySingle("SELECT MAX(ANNUAL) ann from competition_annuals where COMPETITION_ID = ?", $_POST['league']) + 1;
             Db::beginTransaction(); // začátek transakce
-            $compAnnualID = Db::getLastId(Db::query("INSERT INTO competition_annuals (NAME,COMPETITION_ID,ANNUAL) VALUES (?,?,?)", $_POST['league_name'], $_POST['league'], $annual));
+            $compAnnualID = Db::getLastId(Db::insert(
+                'competition_annuals',
+                array(
+                    'NAME' =>  $_POST['league_name'],
+                    'COMPETITION_ID' => $_POST['league'],
+                    'ANNUAL' => $annual
+                )
+            ));
             //Rozřazení týmu + vložení týmu do tabulky
             $n = count($table_teams);
             $a = $n;
@@ -27,7 +34,13 @@
                 $n2 = ($n - 1) / 2;
             }
             for ($i = 0; $i < $n; $i++) {
-                Db::query("INSERT INTO teams_2_competition_annuals (TEAM_ID,COMPETITION_ANNUAL_ID) VALUES (?,?)", $table_teams[$i], $compAnnualID);
+                Db::insert(
+                    'teams_2_competition_annuals',
+                    array(
+                        'TEAM_ID' => $table_teams[$i],
+                        'COMPETITION_ANNUAL_ID' => $compAnnualID
+                    )
+                );
             }
 
             $j = 0;
@@ -37,7 +50,15 @@
                         $team1 = $table_teams[$n2 - $i];
                         $team2 = $table_teams[$n2 + $i + 1];
                         $param_round = $x + 1;
-                        Db::query("INSERT INTO series (COMPETITION_ANNUAL_ID,HOME_TEAM,AWAY_TEAM,ROUND) VALUES (?,?,?,?)", $compAnnualID, $team1, $team2, $param_round);
+                        Db::insert(
+                            'series',
+                            array(
+                                'COMPETITION_ANNUAL_ID' => $compAnnualID,
+                                'HOME_TEAM' => $team1,
+                                'AWAY_TEAM' => $team2,
+                                'ROUND' => $param_round
+                            )
+                        );
                     }
                     $tmp = $table_teams[1];
                     for ($i = 1; $i < sizeof($table_teams) - 1; $i++) {
@@ -47,11 +68,13 @@
                 }
             }
             if (empty($league_err)) {
+                Db::commitTransaction(); //Ukončení transakce
                 $league_create = "liga založena";
+            } else {
+                Db::rollbackTransaction();
             }
         }
     }
-    Db::commitTransaction(); //Ukončení transakce
 
     //bez tymu s ID 0
     $result = Db::queryAll("SELECT ID,NAME FROM TEAMS WHERE ID <> 0;");

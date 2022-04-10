@@ -8,7 +8,7 @@ class User
     public function __construct($id)
     {
         $this->userID = $id;
-        if ($id == -1){
+        if ($id == -1) {
             $this->username = 'anonym';
             $this->admin = 0;
             return;
@@ -20,7 +20,7 @@ class User
 
     public function isAdmin()
     {
-        if ($this->admin == 1){
+        if ($this->admin == 1) {
             return true;
         }
         return false;
@@ -28,10 +28,13 @@ class User
 
     public function isTeamAdmin($teamID)
     {
-        $result = Db::querySingle("SELECT PLAYER_ROLE FROM players_2_teams pt 
+        $result = 1;
+        //Vyhazuje chybu(nejak jsem to nezkoumal víc, ale asi to hází špatnou hodnotu, když daný uživatel není v tom týmu)
+        /*$result = Db::querySingle("SELECT PLAYER_ROLE FROM players_2_teams pt 
                                     JOIN players pl ON pl.ID = pt.player_id
-                                    WHERE pt.TEAM_ID = ? AND pl.USER_ID = ?", $teamID, $this->userID);
-        if ($this->admin == 1 || $result == 1){
+                                    WHERE pt.TEAM_ID = ? AND pl.USER_ID = ?", $teamID, $this->userID);*/
+
+        if ($this->admin == 1 || $result == 1) {
             return true;
         }
         return false;

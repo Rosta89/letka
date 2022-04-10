@@ -1,19 +1,17 @@
 <?php
 
-// Check if the user is logged in, otherwise redirect to login page
+// Ověření, zda je přihlášen
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
     header("location: index.php?page=login");
     exit;
 }
-
-// Define variables and initialize with empty values
 $new_password = $confirm_password = "";
 $new_password_err = $confirm_password_err = "";
 
-// Processing form data when form is submitted
+// Zpracování dat
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Validate new password
+    // Ověření nového hesla
     if (empty(trim($_POST["new_password"]))) {
         $new_password_err = "Prosím zadej nové heslo.";
     } elseif (strlen(trim($_POST["new_password"])) < 6) {
@@ -21,8 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $new_password = trim($_POST["new_password"]);
     }
-
-    // Validate confirm password
     if (empty(trim($_POST["confirm_password"]))) {
         $confirm_password_err = "Prosím potvrď heslo.";
     } else {
@@ -32,11 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Check input errors before updating the database
+    // Ověření zda vše souhlasí a vkládání do databáze
     if (empty($new_password_err) && empty($confirm_password_err)) {
-        // Prepare an update statement
-
-        if (Db::query("UPDATE users SET password = ? WHERE id = ?", password_hash($_SESSION["username"] . $new_password, PASSWORD_DEFAULT), $_SESSION["id"]) == 1) {
+        if ((Db::update(
+            'users',
+            array(
+                'password' => password_hash($_SESSION["username"] . $new_password, PASSWORD_DEFAULT)
+            ),
+            'WHERE id = ' . $_SESSION["id"] . ''
+        )) == 1) {
             session_destroy();
             header("location: index.php?page=login");
             exit();

@@ -8,7 +8,9 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
         for ($i = 0; $i < $playersNumber; $i++) {
             $teamRole = $_GET['role'];
             $playerID = $_GET['playerID'];
-            Db::query('UPDATE players_2_teams SET player_role = ? WHERE PLAYER_ID =? AND TEAM_ID = ?', $teamRole[$i], $playerID[$i], $teamID);
+            Db::update('players_2_teams', array(
+                'player_role' => $teamRole[$i]
+            ), 'WHERE PLAYER_ID = ' . $playerID[$i] . ' AND  TEAM_ID = ' . $teamID . '');
         }
     }
     $teamName = Db::querySingle("SELECT NAME from TEAMS WHERE ID = ?", $teamID);
@@ -45,7 +47,9 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                     <tr>
                                         <th>Jméno</th>
                                         <th>Role</th>
-                                        <?php if ($user->isTeamAdmin($teamID)){echo'<th>Edit</th>';}?>
+                                        <?php if ($user->isTeamAdmin($teamID)) {
+                                            echo '<th>Edit</th>';
+                                        } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,25 +70,27 @@ if (Db::querySingle("SELECT COUNT(*) from TEAMS WHERE ID = ?", $teamID)) {
                                                 }
                                                 ?>
                                             </td>
-                                            <?php if ($user->isTeamAdmin($teamID)){?>
-                                            <td>
-                                                <input type="hidden" name="playerID[]" value="<?= $player['id'] ?>">
-                                                <select name='role[]'>
-                                                    <?php
-                                                    for ($i = 0; $i < count($playerRoles); $i++) {
-                                                        echo ('<option value=' . $i . '> ' . $playerRoles[$i] . '</option>');
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </td>
-                                            <?php }?>
+                                            <?php if ($user->isTeamAdmin($teamID)) { ?>
+                                                <td>
+                                                    <input type="hidden" name="playerID[]" value="<?= $player['id'] ?>">
+                                                    <select name='role[]'>
+                                                        <?php
+                                                        for ($i = 0; $i < count($playerRoles); $i++) {
+                                                            echo ('<option value=' . $i . '> ' . $playerRoles[$i] . '</option>');
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </td>
+                                            <?php } ?>
                                         </tr>
                                     <?php
                                     }
                                     ?>
                                 </tbody>
                             </table>
-                            <?php if ($user->isTeamAdmin($teamID)){echo'<input type="submit" class="btn btn-primary" value="Edit">';}?>
+                            <?php if ($user->isTeamAdmin($teamID)) {
+                                echo '<input type="submit" class="btn btn-primary" value="Edit">';
+                            } ?>
                         </form>
                     </div>
 
